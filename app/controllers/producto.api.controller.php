@@ -1,6 +1,8 @@
 <?php
     require_once './app/controllers/api.controller.php';
     require_once './app/models/producto.model.php';
+    require_once './app/configurations/config.php';
+    require_once './app/helpers/pagination.class.php';
 
     
     class ProductoApiController extends ApiController {
@@ -21,11 +23,23 @@
 
         function get($params = []){
 
-            // Validar utilizando parametros
+            // Filtrado
             if (!$params){
-                $filter = $_GET['filter'] ?? null;
-                if (!empty($_GET['filter'])) {   
-                    $productos = $this->model->getProductosXFabricante($filter);
+                if (isset($_GET['filter'])){
+                    /* Si el filtro [filter] se encuentra vacio,
+                    se realiza un filtro por defecto por el campo nombre y valor vacio (La consulta realiza un LIKE por lo que traeria todos los valores).*/
+                    $filter = 'nombre'; 
+                    $value = "";
+
+                    /* Asignar valores indicados en la consulta */
+                    if (!empty($_GET['filter'])) {
+                        $filter = $_GET['filter'];
+                    }
+                    if (!empty($_GET['value'])){
+                        $value = $_GET['value'];
+                    } 
+
+                    $productos = $this->model->getProductosByFilter($filter, $value);
                     if (empty($productos)){
                         $this->view->response("No hay productos", 400);
                         return;
@@ -39,10 +53,17 @@
             // Traer todos los productos
             if (empty($params[':ID'])) {
                 if (isset($_GET['sort'])) {
-                    $this->view->response("aca", 200);
-                    $productos = $this->order("getAllProductByOrder");
+                    $productos = $this->order("getAllProductByOrder"); // Obtiene productos por ordenamiento
                 } else {
-                    $productos = $this->model->getProductos();
+                    /* Valor por defecto para el paginado */
+                    $page = 1;
+
+                    /* Asignar valores indicados en la consulta */
+                    if (!empty($_GET['page'])) {
+                        $page = $_GET['page'];
+                    }
+                    $init = Pagination::calcular($page);
+                    $productos = $this->model->getProductos($init, ITEMS_PER_PAGE); // Obtiene todos los productos con paginado
                 }
                 $this->view->response($productos, 200);
                 return;
@@ -56,23 +77,29 @@
                     // Subrecurso dinamico
                     if(!empty($params[':subrecurso'])) {
                         $subrecurso = $params[':subrecurso'];
-                        if (isset($producto->$subrecurso)) { // Existe el subrecurso en el item
+                        /* Existe el subrecurso en el item */
+                        if (isset($producto->$subrecurso)) { 
+                            /* Mostrar subrecurso del producto individual */
                             $this->view->response($producto->$subrecurso, 200);
                         } else {
                             $this->view->response ('El producto no contiene '.$subrecurso.'.', 404);
                         }
-                    } else {  
+                    } else { 
+                        /* Mostrar producto individual completo */
                         $this->view->response($producto, 200);
                     }
                 } 
             }
         }
 
-        function order($modelMethod){
+        /* Obtener metodos por ordenamiento */
+        private function order($modelMethod){
 
+            /* Valores por defecto para el ordenamiento */
             $sort = 'precio';
             $order = "ASC";
 
+            /* */
             if (!empty($_GET['sort'])) {
                 $sort = $_GET['sort'];
             }
@@ -80,7 +107,6 @@
                 $order = $_GET['order'];
             }
 
-            $this->view->response("$sort . $order", 200);
             $productos = $this->model->$modelMethod($sort, $order);
             if (empty($productos)){
                 $this->view->response("No hay productos", 404);
@@ -90,7 +116,6 @@
         }
                
            
-    
         
         //Editar producto
         function update($params =null){
@@ -106,12 +131,22 @@
                 $fabricante = $body->id_fabricante;
                 $precio = $body->precio;
                 $moneda = $body->moneda;
+                $ruta_imagen = $body->ruta_imagen;
+
+
+                if (!$ruta_imagen) {
+                    // Si en la actualizacion no trae una nueva imagen, dejas la existente.
+                    $fullPathFile = $producto->ruta_imagen;
+                } else {
+                    // Si en la actualizacion contiene una nueva imagen, actualizar.
+                    $fullPathFile = $this->moveFile($ruta_imagen);
+                }
 
                 // Validar que los campos de la peticion contengan datos
                 if (empty($nombre) || empty($descripcion) || empty($precio) || empty($fabricante)|| empty($moneda) ) {  
                     $this->view->response("Complete todo los campos", 400);
                 } else {
-                    $this->model->editarProducto($nombre, $descripcion, $fabricante, $precio, $moneda, $id);
+                    $this->model->editarProducto($nombre, $descripcion, $fabricante, $precio, $moneda, $id, $fullPathFile);
                     $this->view->response("Se actualizo correctamente el producto con id $id", 201);
                 }
             } else{
@@ -130,23 +165,28 @@
             $moneda = $body->moneda;
             $ruta_imagen = $body->ruta_imagen;
             
-            /* VER SI SE PUEDE AGREGAR IMG POR DEFECTO A LA ENTREGA 2
-            $ruta_imagen = $_GET['ruta_imagen'] ?? null;
-            if($ruta_imagen==null){
-                $ruta_imagen="img_productos/default.png";
-            }*/
-
-            // VER DE SEPARAR ESTA CONDICION, SE REPITE EN AL MENOS 2 SECCIONES DEL MISMO CODIGO
             if (empty($nombre) || empty($descripcion) || empty($precio) || empty($fabricante)|| empty($moneda)|| empty($ruta_imagen)) {
                 $this->view->response("Complete los datos", 400);
             } else {
-                $id = $this->model->agregarProducto($nombre, $descripcion, $fabricante, $precio, $moneda, $ruta_imagen);
+
+                $fullPathFile = $this->moveFile($ruta_imagen);
+                $id = $this->model->agregarProducto($nombre, $descripcion, $fabricante, $precio, $moneda, $fullPathFile);
 
                 // en una API REST es buena práctica es devolver el recurso creado
                 $producto = $this->model->getProducto($id);
                 $this->view->response($producto, 201);
             }
     
+        }
+
+
+        private function moveFile($fromFullFilePath) {
+            /* Armar ruta completa del archivo */
+            $fileName = basename($fromFullFilePath);
+            $toFullPathFile = IMG_FOLDER_PATH . $fileName; 
+            /* Mover archivo a la carpeta local del proyecto */
+            move_uploaded_file($fromFullFilePath, $toFullPathFile);
+            return $toFullPathFile;
         }
     }                 
        
