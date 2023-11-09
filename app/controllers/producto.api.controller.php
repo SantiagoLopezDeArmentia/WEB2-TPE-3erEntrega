@@ -128,7 +128,13 @@
             $fabricante = $body->id_fabricante;
             $precio = $body->precio;
             $moneda = $body->moneda;
-            $ruta_imagen=$body->ruta_imagen;
+            $ruta_imagen = $body->ruta_imagen;
+            
+            /* VER SI SE PUEDE AGREGAR IMG POR DEFECTO A LA ENTREGA 2
+            $ruta_imagen = $_GET['ruta_imagen'] ?? null;
+            if($ruta_imagen==null){
+                $ruta_imagen="img_productos/default.png";
+            }*/
 
             // VER DE SEPARAR ESTA CONDICION, SE REPITE EN AL MENOS 2 SECCIONES DEL MISMO CODIGO
             if (empty($nombre) || empty($descripcion) || empty($precio) || empty($fabricante)|| empty($moneda)|| empty($ruta_imagen)) {

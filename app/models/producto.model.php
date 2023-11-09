@@ -48,12 +48,12 @@
        
 
         /* Actualizar informacion del producto en la base de datos. */
-        public function editarProducto($nombre, $descripcion, $fabricante, $precio, $moneda, $id) {
+        public function editarProducto($nombre, $descripcion, $fabricante, $precio, $moneda, $id, $ruta_imagen) {
             
             $query = $this->dataBase->prepare('UPDATE productos 
-                                    SET nombre = ?, descripcion = ?, id_fabricante = ?, precio = ?, moneda = ?
+                                    SET nombre = ?, descripcion = ?, id_fabricante = ?, precio = ?, moneda = ? ruta_imagen = ?
                                     WHERE id_producto = ?');
-            $query->execute([$nombre, $descripcion, $fabricante, $precio, $moneda, $id]);
+            $query->execute([$nombre, $descripcion, $fabricante, $precio, $moneda, $id, $ruta_imagen]);
 
         }
 
