@@ -12,4 +12,6 @@
     define("IMG_FOLDER_PATH", 'img_productos/');
 
 
+    define("JWT_KEY", "SlAGm")
+
 ?>
