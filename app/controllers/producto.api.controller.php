@@ -29,6 +29,7 @@
         public function validateQueryParams() {
             require_once './app/configurations/queries.params.config.php';
             
+            $addQueryParams = [];
             foreach($arrQueryParams as $obj) {
                 /* Hay query params para procesar.  */
                 if (isset($_GET[$obj->tagParam])){

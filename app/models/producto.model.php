@@ -6,7 +6,10 @@
         /* Obtener todos los productos */
         function getAllProducts($arrQueryParams){
             /* Query principal de consulta. */
-            $queryString = "SELECT * FROM productos";
+            $queryString = "SELECT P.*, F.fabricante 
+                            FROM productos P 
+                            JOIN fabricantes F 
+                            ON P.id_fabricante = F.id_fabricante";
 
             /* Iterar query params para agregar a la consulta en la base de datos. */
             foreach($arrQueryParams as $param) {
@@ -40,7 +43,9 @@
 
         /* Obtener unico producto por ID */
         public function getProducto($id) {
-            $query = $this->dataBase->prepare('SELECT * FROM productos
+            $query = $this->dataBase->prepare('SELECT P.*, F.fabricante FROM productos P
+                                            JOIN fabricantes F 
+                                            ON P.id_fabricante = F.id_fabricante
                                             WHERE id_producto = ?');
             $query->execute([$id]);
             return $query->fetch(PDO::FETCH_OBJ);
