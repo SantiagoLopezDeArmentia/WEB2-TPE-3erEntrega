@@ -19,103 +19,93 @@
            
         }
 
-        //Obtener Productos
+        public function sanitizeValue($queryParam) {
+            $arrColumnsTable = $this->model->getColumns();
 
-        function get($params = []){
+            return in_array($queryParam, $arrColumnsTable);
+        }
 
-            // Filtrado
-            if (!$params){
-                if (isset($_GET['filter'])){
-                    /* Si el filtro [filter] se encuentra vacio,
-                    se realiza un filtro por defecto por el campo nombre y valor vacio (La consulta realiza un LIKE por lo que traeria todos los valores).*/
-                    $filter = 'nombre'; 
-                    $value = "";
-
-                    /* Asignar valores indicados en la consulta */
-                    if (!empty($_GET['filter'])) {
-                        $filter = $_GET['filter'];
-                    }
-                    if (!empty($_GET['value'])){
-                        $value = $_GET['value'];
-                    } 
-
-                    $productos = $this->model->getProductosByFilter($filter, $value);
-                    if (empty($productos)){
-                        $this->view->response("No hay productos", 400);
-                        return;
-                    } else {
-                        $this->view->response($productos, 200);
-                        return;
-                    }
-                }
-            }
-
-            // Traer todos los productos
-            if (empty($params[':ID'])) {
-                if (isset($_GET['sort'])) {
-                    $productos = $this->order("getAllProductByOrder"); // Obtiene productos por ordenamiento
-                } else {
-                    /* Valor por defecto para el paginado */
-                    $page = 1;
-
-                    /* Asignar valores indicados en la consulta */
-                    if (!empty($_GET['page'])) {
-                        $page = $_GET['page'];
-                    }
-                    $init = Pagination::calcular($page);
-                    $productos = $this->model->getProductos($init, ITEMS_PER_PAGE); // Obtiene todos los productos con paginado
-                }
-                $this->view->response($productos, 200);
-                return;
-
-            } else { 
-                // Traer producto por ID
-                $id = $params[':ID'];
-                $producto = $this->model->getProducto($id);
-                if(!empty($producto)) {
+        public function validateQueryParams() {
+            require_once './app/configurations/queries.params.config.php';
+            
+            foreach($arrQueryParams as $obj) {
+                /* Hay query params para procesar.  */
+                if (isset($_GET[$obj->tagParam])){
                     
-                    // Subrecurso dinamico
-                    if(!empty($params[':subrecurso'])) {
-                        $subrecurso = $params[':subrecurso'];
-                        /* Existe el subrecurso en el item */
-                        if (isset($producto->$subrecurso)) { 
-                            /* Mostrar subrecurso del producto individual */
-                            $this->view->response($producto->$subrecurso, 200);
-                        } else {
-                            $this->view->response ('El producto no contiene '.$subrecurso.'.', 404);
-                        }
-                    } else { 
-                        /* Mostrar producto individual completo */
-                        $this->view->response($producto, 200);
+                    /* Agregar valores que se encuentra en el query param. */
+                    if (!empty($_GET[$obj->tagParam])) {
+                        $obj->defaultTagParam = $_GET[$obj->tagParam];
                     }
-                } 
+                    if (!empty($_GET[$obj->tagValueParam])){
+                        $obj->defaultValueParam = $_GET[$obj->tagValueParam];
+                    }
+
+                    /* De existir, ejecutar funcion. */
+                    if ($obj->method != null ) {
+                        $method = $obj->method;
+                        $method($obj);
+                        echo $obj->defaultTagParam;
+                    }
+
+                    /* Hay que sanitizar los datos */
+                    if ($obj->sanitizeValue) {
+                        if ($this->sanitizeValue($obj->defaultTagParam)) {
+                            array_push($addQueryParams, $obj);
+                        } else {
+                            /* Hay error en los datos provistos por la peticion. */
+                            $this->view->response("Peticion con sentencia incorrecta.", 400);
+                            die;
+                        }
+                    } else {
+                        array_push($addQueryParams, $obj);
+                    }  
+                }
             }
+            /* Devolver parametros que cumplieron con los solicitados en la peticion. */
+            return $addQueryParams; 
         }
 
-        /* Obtener metodos por ordenamiento */
-        private function order($modelMethod){
+        /* Obtener producto/productos. */
+        public function get($params = []) {
 
-            /* Valores por defecto para el ordenamiento */
-            $sort = 'precio';
-            $order = "ASC";
-
-            /* */
-            if (!empty($_GET['sort'])) {
-                $sort = $_GET['sort'];
+            if (!$params) {
+                $arr = $this->validateQueryParams();
+                $productos = $this->model->getAllProducts($arr);
+                if (empty($productos)){
+                    $this->view->response("No hay productos", 400);
+                    return;
+                } else {
+                    $this->view->response($productos, 200);
+                    return;
+                }
             }
-            if (!empty($_GET['order'])){
-                $order = $_GET['order'];
-            }
-
-            $productos = $this->model->$modelMethod($sort, $order);
-            if (empty($productos)){
-                $this->view->response("No hay productos", 404);
-                die;
-            }
-            return $productos;
+            /* Obtener producto por ID */
+            $this->getById($params);
         }
-               
-           
+
+        /* Obtener producto por ID. */
+        function getById($params) {
+            // Traer producto por ID
+            $id = $params[':ID'];
+            $producto = $this->model->getProducto($id);
+            if(!empty($producto)) {
+                
+                // Subrecurso dinamico
+                if(!empty($params[':subrecurso'])) {
+                    $subrecurso = $params[':subrecurso'];
+                    /* Existe el subrecurso en el item */
+                    if (isset($producto->$subrecurso)) { 
+                        /* Mostrar subrecurso del producto individual */
+                        $this->view->response($producto->$subrecurso, 200);
+                    } else {
+                        $this->view->response ('El producto no contiene '.$subrecurso.'.', 404);
+                    }
+                } else { 
+                    /* Mostrar producto individual completo */
+                    $this->view->response($producto, 200);
+                }
+            }
+        }
         
         //Editar producto
         function update($params =null){
@@ -179,13 +169,13 @@
     
         }
 
-
+        /* Copiar archivo de la ruta indicada a la local */
         private function moveFile($fromFullFilePath) {
             /* Armar ruta completa del archivo */
             $fileName = basename($fromFullFilePath);
             $toFullPathFile = IMG_FOLDER_PATH . $fileName; 
-            /* Mover archivo a la carpeta local del proyecto */
-            move_uploaded_file($fromFullFilePath, $toFullPathFile);
+            /* Copiar archivo a la carpeta local del proyecto */
+            copy($fromFullFilePath, $toFullPathFile);
             return $toFullPathFile;
         }
     }                 

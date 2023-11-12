@@ -3,8 +3,8 @@
 
     class Pagination {
 
-        public static function calcular($page) {
-            return ($page-1)*ITEMS_PER_PAGE;
+        public static function calcular($page, $limit) {
+            return ($page-1)*$limit;
         }
 
     }

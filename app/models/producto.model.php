@@ -3,18 +3,40 @@
     require_once './app/models/bd.model.php';
     class ProductoModel extends Model{
 
-       
-
         /* Obtener todos los productos */
-        function getProductos($init, $end){
-            $consulta = "SELECT *
-            FROM productos
-            LIMIT $init, $end";
-            $query = $this->dataBase->prepare($consulta);
-            $query->execute();
+        function getAllProducts($arrQueryParams){
+            /* Query principal de consulta. */
+            $queryString = "SELECT * FROM productos";
 
-            $productos = $query->fetchAll(PDO::FETCH_OBJ);
-            return $productos;
+            /* Iterar query params para agregar a la consulta en la base de datos. */
+            foreach($arrQueryParams as $param) {
+                switch($param->validateTagPDO) {
+                    case 'filter':
+                        /* Se agrega fragmento para filtrado. */
+                        $queryString = $queryString . "\nWHERE $param->defaultTagParam = '$param->defaultValueParam'";
+                        break;
+                    case 'sort':
+                        /* Se agrega fragmento para realizar el ordenamiento. */
+                        $queryString = $queryString . "\nORDER BY $param->defaultTagParam  $param->defaultValueParam";
+                        break;
+                    case 'pagination':
+                        /* Se agrega fragmento para realizar la paginacion. */
+                        $queryString = $queryString . "\nLIMIT $param->defaultTagParam, $param->defaultValueParam";
+                        break;
+                }
+            }
+            echo $queryString;
+            try {
+                $query = $this->dataBase->prepare($queryString);
+                $query->execute();
+
+                $productos = $query->fetchAll(PDO::FETCH_OBJ);
+
+                return $productos;
+            } catch(Exception $e) {
+                return [];
+            }
+            
         }
 
         /* Obtener unico producto por ID */
@@ -25,18 +47,7 @@
             return $query->fetch(PDO::FETCH_OBJ);
         }
         
-        /* Obtener productos por fabricante. */
-        function getProductosXFabricante($filter){
-            $query = $this->dataBase->prepare('SELECT *, F.fabricante 
-                                        FROM productos P 
-                                        JOIN fabricantes F 
-                                        ON P.id_fabricante = F.id_fabricante
-                                        WHERE P.id_fabricante = ?');
-            $query->execute([$filter]);
-            $productos = $query->fetchAll(PDO::FETCH_OBJ);
-            return $productos;
-        }
-
+       
         /* Crear un nuevo producto en la base de datos */
         function agregarProducto($nombre, $descripcion, $fabricante, $precio, $moneda,$ruta_imagen) {
             /* Validar que se contengan todos los datos necesarios para cargar el producto */
@@ -59,45 +70,13 @@
 
         }
 
-        /* Obtener todos los productos por un orden especifico */
-        public function getAllProductByOrder($sort, $order) {
-            try {
-                $consulta = "SELECT * FROM productos ORDER BY $sort $order";
-                $query = $this->dataBase->prepare($consulta);
-                $query->execute();
-                return $query->fetchAll(PDO::FETCH_OBJ);
-            } catch (Exception $e) {
-                return [];
-            }
-            
-        }
-
-
-        public function getFilteredProductAndOrder($filter, $value, $sort, $order) {
-            try {
-                $consulta = "SELECT * FROM productos 
-                            WHERE $filter = $value
-                            ORDER BY $sort $order";
-                $query = $this->dataBase->prepare($consulta);
-                $query->execute();
-                return $query->fetchAll(PDO::FETCH_OBJ);
-            } catch (Exception $e) {
-                return [];
-            }
-            
-        }
-
-        /* Obtener productos columna especifica. */
-        function getProductosByFilter($filter, $value){
-            $consulta = "SELECT * 
-                        FROM productos
-                        WHERE $filter LIKE '%$value%'";
-            $query = $this->dataBase->prepare($consulta);
+        /* Obtener columnas de la tabla productos. */
+        function getColumns() {
+            $query = $this->dataBase->prepare('SHOW COLUMNS FROM productos');
             $query->execute();
-            $productos = $query->fetchAll(PDO::FETCH_OBJ);
-            return $productos;
-        }
 
+            return $query->fetchAll(PDO::FETCH_COLUMN);
+        }
         
     }
 
