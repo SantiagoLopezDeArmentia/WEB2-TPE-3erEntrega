@@ -3,6 +3,7 @@
     require_once './libs/router.php';
 
     require_once './app/controllers/producto.api.controller.php';
+    require_once './app/controllers/auth.api.controller.php';
 
     $router = new Router();
 
@@ -13,6 +14,8 @@
     $router->addRoute('productos/:ID', 'PUT',    'ProductoApiController', 'update');
    
     $router->addRoute('productos/:ID/:subrecurso', 'GET',    'ProductoApiController', 'get'   );
+
+    $router->addRoute('user/token',     'GET',    'AuthApiController', 'getToken'   );
     
     
 

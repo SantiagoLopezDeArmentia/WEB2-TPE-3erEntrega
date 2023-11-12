@@ -14,4 +14,6 @@
     /* Se utiliza para la paginacion */
     define("ITEMS_PER_PAGE", 2);
 
+    define("JWT_KEY", "SlAGm")
+
 ?>

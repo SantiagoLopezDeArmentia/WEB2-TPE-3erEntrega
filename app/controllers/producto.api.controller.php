@@ -3,26 +3,27 @@
     require_once './app/models/producto.model.php';
     require_once './app/configurations/config.php';
     require_once './app/helpers/pagination.class.php';
+    require_once './app/helpers/authHelper.php';
 
     
     class ProductoApiController extends ApiController {
 
         // Atributos
         private  $model;
-        
+        private $authHelper;
 
         // Constructor
 
         public function __construct() {
             parent::__construct();
             $this->model = new ProductoModel();
-           
+            $this->authHelper = new AuthHelper();
         }
 
         //Obtener Productos
 
-        function get($params = []){
-
+        function get($params = []){  
+           
             // Filtrado
             if (!$params){
                 if (isset($_GET['filter'])){
@@ -119,7 +120,11 @@
         
         //Editar producto
         function update($params =null){
-        
+            $user = $this->authHelper->currentUser();
+            if (!$user){
+                $this->view->response("Unauthorized",401);
+                return;
+            }
             $id = $params[':ID'];
             $producto=$this->model->getProducto($id);
             // El product con id 'ID' existe en la base de datos?
@@ -157,6 +162,11 @@
         //Agregar Producto
 
         function create() {
+            $user = $this->authHelper->currentUser();
+            if (!$user){
+                $this->view->response("Unauthorized",401);
+                return;
+            }
             $body = $this->getData();
             $nombre= $body->nombre;
             $descripcion = $body->descripcion;
@@ -188,6 +198,8 @@
             move_uploaded_file($fromFullFilePath, $toFullPathFile);
             return $toFullPathFile;
         }
+
+     
     }                 
        
 ?> 
