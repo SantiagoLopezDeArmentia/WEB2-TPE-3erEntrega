@@ -25,7 +25,6 @@
                         break;
                 }
             }
-            echo $queryString;
             try {
                 $query = $this->dataBase->prepare($queryString);
                 $query->execute();

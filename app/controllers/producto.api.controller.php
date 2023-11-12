@@ -45,7 +45,6 @@
                     if ($obj->method != null ) {
                         $method = $obj->method;
                         $method($obj);
-                        echo $obj->defaultTagParam;
                     }
 
                     /* Hay que sanitizar los datos */
