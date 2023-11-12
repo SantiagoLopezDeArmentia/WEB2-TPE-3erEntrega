@@ -20,12 +20,14 @@
             $this->authHelper = new AuthHelper();
         }
 
+        /* Validar si el parametro principal es una columna de la tabla.  */ 
         public function sanitizeValue($queryParam) {
             $arrColumnsTable = $this->model->getColumns();
 
             return in_array($queryParam, $arrColumnsTable);
         }
 
+        /* Se valid y analiza las query params de la peticion.  */
         public function validateQueryParams() {
             require_once './app/configurations/queries.params.config.php';
             
@@ -130,7 +132,7 @@
 
 
                 if (!$ruta_imagen) {
-                    // Si en la actualizacion no trae una nueva imagen, dejas la existente.
+                    // Si en la actualizacion no trae una nueva imagen, se mantiene la existente.
                     $fullPathFile = $producto->ruta_imagen;
                 } else {
                     // Si en la actualizacion contiene una nueva imagen, actualizar.
@@ -150,7 +152,6 @@
         }  
 
         //Agregar Producto
-
         function create() {
             $user = $this->authHelper->currentUser();
             if (!$user){
@@ -164,12 +165,19 @@
             $precio = $body->precio;
             $moneda = $body->moneda;
             $ruta_imagen = $body->ruta_imagen;
-            
-            if (empty($nombre) || empty($descripcion) || empty($precio) || empty($fabricante)|| empty($moneda)|| empty($ruta_imagen)) {
+
+                       
+            if (empty($nombre) || empty($descripcion) || empty($precio) || empty($fabricante)|| empty($moneda)) {
                 $this->view->response("Complete los datos", 400);
             } else {
 
-                $fullPathFile = $this->moveFile($ruta_imagen);
+                /* Imagen que se debe utilizar. */
+                if (empty($ruta_imagen)) {
+                    $fullPathFile = IMG_FOLDER_PATH . DEFAULT_IMG_PRODUCT;
+                } else {
+                    $fullPathFile = $this->moveFile($ruta_imagen);
+                }
+                
                 $id = $this->model->agregarProducto($nombre, $descripcion, $fabricante, $precio, $moneda, $fullPathFile);
 
                 // en una API REST es buena práctica es devolver el recurso creado
@@ -181,8 +189,9 @@
 
         /* Copiar archivo de la ruta indicada a la local */
         private function moveFile($fromFullFilePath) {
-            /* Armar ruta completa del archivo */
+            /* Obtener nombre del archivo. */
             $fileName = basename($fromFullFilePath);
+            /* Armar ruta completa del archivo donde se copiara */
             $toFullPathFile = IMG_FOLDER_PATH . $fileName; 
             /* Copiar archivo a la carpeta local del proyecto */
             copy($fromFullFilePath, $toFullPathFile);

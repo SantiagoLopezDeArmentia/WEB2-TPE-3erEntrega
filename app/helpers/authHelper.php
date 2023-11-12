@@ -32,7 +32,9 @@
                 "typ" => "JWT"
             );
 
-            $payload->exp = time() + 60; //se vence en 1 min el token
+            /* Asignar tiempo de expiracion del token.
+            En el archivo de configuracion se puede cambiar la duracion del mismo. */
+            $payload->exp = time() + TIMEOUT_EXPIRATION_TOKEN; 
 
             $header = $this->base64url_encode(json_encode($header));
             $payload = $this->base64url_encode(json_encode($payload));
