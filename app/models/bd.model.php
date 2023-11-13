@@ -27,7 +27,7 @@
         -- https://www.phpmyadmin.net/
         --
         -- Host: 127.0.0.1
-        -- Generation Time: Nov 13, 2023 at 12:54 PM
+        -- Generation Time: Nov 13, 2023 at 08:36 PM
         -- Server version: 10.4.28-MariaDB
         -- PHP Version: 8.2.4
 
@@ -94,10 +94,13 @@
         (20, 'PS5', 'Play Station 5. Consola de ultima generacion.', 10, 'img_productos/screenshot_252.png', 750000, 'ARG', 0),
         (21, 'Mouse Razer Mamba Elite', 'Mouse razer negro. 2mts de cable.', 5, 'img_productos/screenshot_207.png', 23500, 'ARG', 0),
         (23, 'Auriculares', 'Auriculares gamer con luces', 5, 'img_productos/screenshot_238.png', 105320, 'ARG', 0),
-        (24, 'Placa de video Gygabite GTX', 'El gaming en tus manos.', 3, 'img_productos/screenshot_141.png', 823650, 'ARG', 0),
+        (24, 'Placa de video Gygabite GTX', 'El gaming en tus manos.', 3, 'img_productos/screenshot_244.png', 823650, 'ARG', 0),
         (32, 'Placa de video Gygabite GTX', 'El gaming en tu vida.', 3, '../img_productos/screenshot_141.png', 823650, 'ARG', 0),
         (33, 'Placa de video Gygabite GTX', 'El gaming en tu vida.', 3, 'img_productos/screenshot_141.png', 823650, 'ARG', 0),
-        (34, 'Protector pantalla', 'Aumenta la vida util del monitor.', 3, 'img_productos/default.png', 43650, 'ARG', 0);
+        (34, 'Protector pantalla', 'Aumenta la vida util del monitor.', 3, 'img_productos/default.png', 43650, 'ARG', 0),
+        (35, 'Microfono Razer', 'Con emojis y luces', 5, 'img_productos/screenshot_253.png', 132400, 'ARG', 0),
+        (36, 'Teclado Razer', 'widows', 5, 'img_productos/default.png', 123567, 'ARG', 0),
+        (37, 'Volante', 'v', 10, 'img_productos/default.png', 45000, 'ARG', 0);
 
         -- --------------------------------------------------------
 
@@ -155,7 +158,7 @@
         -- AUTO_INCREMENT for table `productos`
         --
         ALTER TABLE `productos`
-          MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+          MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
         --
         -- AUTO_INCREMENT for table `usuarios`
@@ -177,6 +180,7 @@
         /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
         /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
         /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
 
 
         END;
