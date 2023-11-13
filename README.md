@@ -118,7 +118,9 @@ Adicional, se encuentra disponible la posibilidad de solicitar un *subrecurso* d
   * api/productos/17/descripcion
 
   Ejemplo response:
-  * Aumenta la vida util del monitor.
+  ```json
+   Aumenta la vida util del monitor.
+  ```
 
 
 ## POST
