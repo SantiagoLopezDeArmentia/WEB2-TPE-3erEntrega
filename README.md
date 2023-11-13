@@ -138,21 +138,19 @@ Adicional, se encuentra disponible la posibilidad de solicitar un *subrecurso* d
       "moneda": "ARG"
     }
   ```
-  >[!Campos requeridos]
+  >[!PREREQUISITES]
   >
   > **Los siguientes son los campos requeridos para la creacion de un producto: nombre, descripcion, id_fabricante, precio, moneda.**
 
-  >[!NOTA1]
+  >[!NOTE]
   >
   > **La imagen no es requerida, por lo que, en caso de no asignarse una, se pondra una por defecto.**
   > **Para agregar una imagen se requiere usar el tag "ruta_imagen" y se debera colocar la ruta completa.**
 
-  >[!NOTA2]
+  >[!NOTE]
   >
   > **Los productos contiene un campo de "oferta" el cual no es requerido al momento de su creación. en caso de no asignarse, se dara un valor por defecto. El campo es de tipo booleano ya admite los valores [0/1].**
 
-  >[!Request completa]
-  >
   > ```json
   > {
   >   "nombre": "Protector pantalla",
@@ -186,21 +184,19 @@ Actualiza un producto dado mediante ID. Se sigue la misma metodologia que para l
       "moneda": "ARG"
     }
   ```
-  >[!Campos requeridos]
+   >[!PREREQUISITES]
   >
   > **Los siguientes son los campos requeridos para la creacion de un producto: nombre, descripcion, id_fabricante, precio, moneda.**
 
-  >[!NOTA1]
+  >[!NOTE]
   >
   > **La imagen no es requerida, por lo que, en caso de no asignarse una, se pondra una por defecto.**
   > **Para agregar una imagen se requiere usar el tag "ruta_imagen" y se debera colocar la ruta completa.**
 
-  >[!NOTA2]
+  >[!NOTE]
   >
   > **Los productos contiene un campo de "oferta" el cual no es requerido al momento de su creación. en caso de no asignarse, se dara un valor por defecto. El campo es de tipo booleano ya admite los valores [0/1].**
 
-  >[!Request completa]
-  >
   > ```json
   > {
   >   "nombre": "Protector pantalla",
