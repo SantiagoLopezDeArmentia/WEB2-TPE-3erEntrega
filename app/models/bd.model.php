@@ -27,7 +27,7 @@
         -- https://www.phpmyadmin.net/
         --
         -- Host: 127.0.0.1
-        -- Generation Time: Oct 18, 2023 at 01:08 AM
+        -- Generation Time: Nov 13, 2023 at 12:54 PM
         -- Server version: 10.4.28-MariaDB
         -- PHP Version: 8.2.4
 
@@ -44,7 +44,7 @@
         --
         -- Database: `productos_gaming`
         --
-        
+
         -- --------------------------------------------------------
 
         --
@@ -63,11 +63,9 @@
         --
 
         INSERT INTO `fabricantes` (`id_fabricante`, `fabricante`, `pais_origen`, `contacto`) VALUES
-        (1, 'Logitech', 'Noruega', 'Los Loros 1111'),
         (3, 'Gigabyte', 'London', 'Santa Monica 1234'),
-        (5, 'Razer', 'EE. UU', 'Av. Loro 1556'),
-        (10, 'Sony', 'EE. UU', 'St. Bermuz 5589'),
-        (11, 'GX', 'Rusia', 'Guatemala 6.');
+        (5, 'Razer', 'Estados Unidos (EE.UU.)', 'Av. Loro 1556'),
+        (10, 'Sony', 'EE. UU', 'St. Bermuz 5589');
 
         -- --------------------------------------------------------
 
@@ -82,18 +80,24 @@
           `id_fabricante` int(11) NOT NULL,
           `ruta_imagen` varchar(265) NOT NULL,
           `precio` double NOT NULL,
-          `moneda` varchar(10) NOT NULL
+          `moneda` varchar(10) NOT NULL,
+          `oferta` tinyint(1) DEFAULT 0
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
         --
         -- Dumping data for table `productos`
         --
 
-        INSERT INTO `productos` (`id_producto`, `nombre`, `descripcion`, `id_fabricante`, `ruta_imagen`, `precio`, `moneda`) VALUES
-        (1, 'Logitech Mouse G604', 'Resumen', 1, './img_productos/screenshot_87.png', 45000, 'ARG'),
-        (17, 'Pad', 'Pad ultra slim con tela ergonomica.', 5, 'img_productos/screenshot_238.png', 35000, 'ARG'),
-        (19, 'Monitor Gigabyte G27FC', 'Monitor 4K Ultra Slim para que tus partidas las ganes .', 3, 'img_productos/screenshot_220.png', 150, 'USD'),
-        (20, 'PS5', 'Play Station 5. Consola de ultima generacion.', 10, 'img_productos/screenshot_252.png', 750000, 'ARG');
+        INSERT INTO `productos` (`id_producto`, `nombre`, `descripcion`, `id_fabricante`, `ruta_imagen`, `precio`, `moneda`, `oferta`) VALUES
+        (17, 'Pad', 'Pad ultra slim con tela ergonomica. color negro', 5, 'img_productos/screenshot_238.png', 60000, 'ARG', 0),
+        (19, 'Monitor Gigabyte G27FC', 'Monitor 4K Ultra Slim para que tus partidas las ganes .', 3, 'img_productos/screenshot_220.png', 170, 'USD', 0),
+        (20, 'PS5', 'Play Station 5. Consola de ultima generacion.', 10, 'img_productos/screenshot_252.png', 750000, 'ARG', 0),
+        (21, 'Mouse Razer Mamba Elite', 'Mouse razer negro. 2mts de cable.', 5, 'img_productos/screenshot_207.png', 23500, 'ARG', 0),
+        (23, 'Auriculares', 'Auriculares gamer con luces', 5, 'img_productos/screenshot_238.png', 105320, 'ARG', 0),
+        (24, 'Placa de video Gygabite GTX', 'El gaming en tus manos.', 3, 'img_productos/screenshot_141.png', 823650, 'ARG', 0),
+        (32, 'Placa de video Gygabite GTX', 'El gaming en tu vida.', 3, '../img_productos/screenshot_141.png', 823650, 'ARG', 0),
+        (33, 'Placa de video Gygabite GTX', 'El gaming en tu vida.', 3, 'img_productos/screenshot_141.png', 823650, 'ARG', 0),
+        (34, 'Protector pantalla', 'Aumenta la vida util del monitor.', 3, 'img_productos/default.png', 43650, 'ARG', 0);
 
         -- --------------------------------------------------------
 
@@ -151,7 +155,7 @@
         -- AUTO_INCREMENT for table `productos`
         --
         ALTER TABLE `productos`
-          MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+          MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
         --
         -- AUTO_INCREMENT for table `usuarios`
@@ -173,6 +177,7 @@
         /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
         /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
         /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
 
         END;
                   
