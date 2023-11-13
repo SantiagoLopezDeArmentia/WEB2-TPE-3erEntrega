@@ -23,18 +23,16 @@
   ![Diagrama Entidad-Relacion](diagrama-entidad-relacion.jpg)
 
 
-### Documentación API
+# Documentación API
 
-## END Point's
-
-### GET
+## GET
 
 
 1. URL: api/productos
   Devuelve todos los productos que se encuentren en la base de datos.
 
   Ejemplo response:
-    ...json
+  ```json
     [
       {
         "id_producto": 34,
@@ -46,15 +44,12 @@
         "moneda": "ARG",
         "fabricante": "Gigabyte"
       }
-      .
-      .
-      .
     ]
-    ...
+  ```
 
 A su vez, este puede utilizarse con diferentes cadenas de consulta [Filtrado(filter), Ordenamiento(sort), Paginación(pagination)].
 
-## Filtrado (filter)
+### Filtrado (filter)
   Filtrado se implementa utilizando los siguientes parámetros: api/productos?filter=[valor]&filterValue=[valor].
 
   | Parámetro | Tipo | Ejemplo | Descripción |
@@ -64,7 +59,7 @@ A su vez, este puede utilizarse con diferentes cadenas de consulta [Filtrado(fil
 
 
 
-## Ordenamiento (sort)
+### Ordenamiento (sort)
   Ordenamiento se implementa utilizando los siguientes parámetros: api/productos?sort=[valor]&order=[valor].
 
   | Parámetro | Tipo | Ejemplo | Descripción |
@@ -72,7 +67,7 @@ A su vez, este puede utilizarse con diferentes cadenas de consulta [Filtrado(fil
   | sort    | String   | sort=nombre   | Valor nombre de la columna. Se realizara el ordenamientopor la columna [nombre] de la tabla.|
   | order    | String   | order=desc   | Valor de búsqueda. Se aplicara el ordenamiento en orden descendente. Posibles valores admitidos [asc/desc]. |
 
-## Paginación (pagination)
+### Paginación (pagination)
   Paginación se implementa utilizando los siguientes parámetros: api/productos?page=[valor]&limit=[valor]
 
   | Parámetro | Tipo | Ejemplo | Descripción |
@@ -80,7 +75,7 @@ A su vez, este puede utilizarse con diferentes cadenas de consulta [Filtrado(fil
   | page    | String   | page=2   | Número de página a mostrar.|
   | limit    | String   | limit=3   | Límite de elementos que se deberán mostrar. |
 
-# Valores por defecto
+### Valores por defecto
 
   Cuando se hace uso de la cadena de parametro principal filter, sort, page y estos no toman ningun valor o no se encuentra el parámetro compañero, se toman los siguientes valores por defecto. Lo mismo aplica para los parametros secundarios.
 
@@ -100,12 +95,11 @@ La combinación de todos los parámetros se encuentra disponible. Ejemplo: api/p
   Devuelve un producto que se encuentren en la base de datos por el ID del mismo.
 
   Ejemplo request: 
-    - api/productos/17
+  * api/productos/17
 
   Ejemplo response:
-    Ejemplo response:
-    ...json
-    {
+  ```json
+   {
       "id_producto": 17,
       "nombre": "Protector pantalla",
       "descripcion": "Aumenta la vida util del monitor.",
@@ -115,15 +109,38 @@ La combinación de todos los parámetros se encuentra disponible. Ejemplo: api/p
       "moneda": "ARG",
       "fabricante": "Gigabyte"
     }
-    ...
+  ```
 
-Adicional, se encuentra disponible la posibilidad de solicitar un subrecurso del producto.
+Adicional, se encuentra disponible la posibilidad de solicitar un *subrecurso* del producto.
   URL: api/productos/:ID/:subrecurso
 
   Ejemplo request:
-    - api/productos/17/descripcion
+  * api/productos/17/descripcion
 
   Ejemplo response:
-    "Aumenta la vida util del monitor."
+  * Aumenta la vida util del monitor.
+
+
+## POST
+
+  Ingresa un nuevo producto en el sistema.
+  1. URL: api/productos
+
+  Body de la request:
+  ```json
+   {
+      "id_producto": 17,
+      "nombre": "Protector pantalla",
+      "descripcion": "Aumenta la vida util del monitor.",
+      "id_fabricante": 3,
+      "ruta_imagen": "img_productos/default.png",
+      "precio": 43650,
+      "moneda": "ARG"
+    }
+  ```
+  >[!IMPORTANT]
+  >
+  > Verbo POST requiere autenticacion.
+
 
 
