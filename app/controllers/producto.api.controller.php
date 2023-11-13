@@ -107,6 +107,8 @@
                     /* Mostrar producto individual completo */
                     $this->view->response($producto, 200);
                 }
+            } else {
+                $this->view->response('El producto con id ['.$id.'] no existe.', 404);
             }
         }
         
@@ -128,10 +130,8 @@
                 $fabricante = $body->id_fabricante;
                 $precio = $body->precio;
                 $moneda = $body->moneda;
-                //$ruta_imagen = (isset($body->ruta_imagen) && !empty($body->ruta_imagen))? $body->ruta_imagen : null;
-                $ruta_imagen = $body->ruta_imagen;
+                $ruta_imagen = (isset($body->ruta_imagen) && !empty($body->ruta_imagen))? $body->ruta_imagen : null;
                 $oferta = $body->oferta;
-                //$oferta = (isset($body->oferta) && !empty($body->oferta))? $body->oferta : $producto->oferta;
                 
 
 
@@ -144,15 +144,17 @@
                 }
 
                 // Validar que los campos de la peticion contengan datos
-                if (empty($nombre) || empty($descripcion) || empty($precio) || empty($fabricante)|| empty($moneda) ) {  
+                if (empty($nombre) || empty($descripcion) || empty($precio) ||
+                empty($fabricante)|| empty($moneda) ) {  
                     $this->view->response("Complete todo los campos", 400);
                 } else {
                     $this->model->editarProducto($nombre, $descripcion, $fabricante,
                     $precio, $moneda, $id, $fullPathFile, $oferta);
                     $this->view->response("Se actualizo correctamente el producto con id $id", 201);
+                    return;
                 }
             } else{
-                $this->view->response('El producto con id='.$id.' no existe.', 404);
+                $this->view->response('El producto con id ['.$id.'] no existe.', 404);
             }
         }  
 
@@ -169,10 +171,12 @@
             $fabricante = $body->id_fabricante;
             $precio = $body->precio;
             $moneda = $body->moneda;
-            $ruta_imagen = $body->ruta_imagen;
+
+            $ruta_imagen = (isset($body->ruta_imagen)) ? $body->ruta_imagen : null;
 
                        
-            if (empty($nombre) || empty($descripcion) || empty($precio) || empty($fabricante)|| empty($moneda)) {
+            if (empty($nombre) || empty($descripcion) || empty($precio) ||
+            empty($fabricante)|| empty($moneda)) {
                 $this->view->response("Complete los datos", 400);
             } else {
 

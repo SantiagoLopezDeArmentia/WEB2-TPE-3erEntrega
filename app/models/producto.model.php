@@ -53,24 +53,27 @@
         
        
         /* Crear un nuevo producto en la base de datos */
-        function agregarProducto($nombre, $descripcion, $fabricante, $precio, $moneda,$ruta_imagen) {
+        function agregarProducto($nombre, $descripcion, $fabricante, $precio, $moneda,$ruta_imagen, $oferta) {
             /* Validar que se contengan todos los datos necesarios para cargar el producto */
             $query = $this->dataBase->prepare('INSERT INTO productos (nombre, descripcion,
-                                        id_fabricante, ruta_imagen, precio, moneda) 
-                                        VALUES (?, ?, ?, ?, ?,?)');
-            $query->execute([$nombre, $descripcion, $fabricante,$ruta_imagen, $precio, $moneda]);
+                                        id_fabricante, ruta_imagen, precio, moneda, oferta) 
+                                        VALUES (?, ?, ?, ?, ?, ?, ?)');
+            $query->execute([$nombre, $descripcion, $fabricante,$ruta_imagen, $precio, $moneda, $oferta]);
             return $this->dataBase->lastInsertId();
         }
 
        
 
         /* Actualizar informacion del producto en la base de datos. */
-        public function editarProducto($nombre, $descripcion, $fabricante, $precio, $moneda, $id, $fullPathFile) {
+        public function editarProducto($nombre, $descripcion, $fabricante, $precio,
+        $moneda, $id, $fullPathFile, $oferta) {
             
             $query = $this->dataBase->prepare('UPDATE productos 
-                                    SET nombre = ?, descripcion = ?, id_fabricante = ?, precio = ?, moneda = ?, ruta_imagen = ?
+                                    SET nombre = ?, descripcion = ?, id_fabricante = ?,
+                                     precio = ?, moneda = ?, ruta_imagen = ?, oferta = ?
                                     WHERE id_producto = ?');
-            $query->execute([$nombre, $descripcion, $fabricante, $precio, $moneda, $id, $fullPathFile]);
+            $query->execute([$nombre, $descripcion, $fabricante,
+            $precio, $moneda, $fullPathFile, $oferta, $id]);
 
         }
 
