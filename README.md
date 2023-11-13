@@ -215,4 +215,25 @@ Actualiza un producto dado mediante ID. Se sigue la misma metodologia que para l
   > **Verbo PUT requiere autenticacion.**
 
 
+  **AUTORIZACION**
+
+**GET** 
+URL: : api/user/token
+
+Devuelve, de ser correctos los datos introducidos (usuario y contraseña),  un token que permite autenticarse.
+
+Los datos requeridos para la generacion del mismo se deberan completar en los campos que ofrece Authorization, Type: Basic Auth. 
+
+Ejemplo response:
+
+ "edfgyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c3VhcmlvIjoxLCJ1c3VhcmlvIjoid2ViYWRtaW4iLCJjb250cmFzZW5pYSI6IiQyeSQxMCRmV0NwbWE3UXYFLdUxOOFZCUVpPVGR5LmZIY25dcL1pEZjh2TEgyNUdOaWtDOEM3TEMiLCJleHAiOjE2OTk5MTU1ODZ9.xld7LJM-B_xJYHeVUMA51864ID5O1IehjkudYt2KJY2BpY"
+
+    
+    
+   
+El token generado mediante este endpoint será requerido para todos los request de tipo POST y PUT de las entidades de datos. Deberá agregarse a los Headers del request en el siguiente formato:
+
+  Key: Authorization Value:  Bearer **Token**    
+
+
 
