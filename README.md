@@ -131,18 +131,92 @@ Adicional, se encuentra disponible la posibilidad de solicitar un *subrecurso* d
   Body de la request:
   ```json
    {
-      "id_producto": 17,
       "nombre": "Protector pantalla",
       "descripcion": "Aumenta la vida util del monitor.",
       "id_fabricante": 3,
-      "ruta_imagen": "img_productos/default.png",
       "precio": 43650,
       "moneda": "ARG"
     }
   ```
+  >[!Campos requeridos]
+  >
+  > **Los siguientes son los campos requeridos para la creacion de un producto: nombre, descripcion, id_fabricante, precio, moneda.**
+
+  >[!NOTA1]
+  >
+  > **La imagen no es requerida, por lo que, en caso de no asignarse una, se pondra una por defecto.**
+  > **Para agregar una imagen se requiere usar el tag "ruta_imagen" y se debera colocar la ruta completa.**
+
+  >[!NOTA2]
+  >
+  > **Los productos contiene un campo de "oferta" el cual no es requerido al momento de su creación. en caso de no asignarse, se dara un valor por defecto. El campo es de tipo booleano ya admite los valores [0/1].**
+
+  >[!Request completa]
+  >
+  > ```json
+  > {
+  >   "nombre": "Protector pantalla",
+  >   "descripcion": "Aumenta la vida util del monitor.",
+  >   "id_fabricante": 3,
+  >   "ruta_imagen": "C:\\Documentos\\Imagenes\\producto.png",
+  >   "precio": 43650,
+  >   "moneda": "ARG",
+  >   "oferta": 1
+  > }
+  >```
+  
+
   >[!IMPORTANT]
   >
-  > Verbo POST requiere autenticacion.
+  > **Verbo POST requiere autenticacion.**
+
+## PUT
+
+Actualiza un producto dado mediante ID. Se sigue la misma metodologia que para la creacion de un producto.
+
+  1. URL: api/productos/39
+
+  Body de la request:
+  ```json
+   {
+      "nombre": "Protector pantalla",
+      "descripcion": "Aumenta la vida util del monitor.",
+      "id_fabricante": 3,
+      "precio": 43650,
+      "moneda": "ARG"
+    }
+  ```
+  >[!Campos requeridos]
+  >
+  > **Los siguientes son los campos requeridos para la creacion de un producto: nombre, descripcion, id_fabricante, precio, moneda.**
+
+  >[!NOTA1]
+  >
+  > **La imagen no es requerida, por lo que, en caso de no asignarse una, se pondra una por defecto.**
+  > **Para agregar una imagen se requiere usar el tag "ruta_imagen" y se debera colocar la ruta completa.**
+
+  >[!NOTA2]
+  >
+  > **Los productos contiene un campo de "oferta" el cual no es requerido al momento de su creación. en caso de no asignarse, se dara un valor por defecto. El campo es de tipo booleano ya admite los valores [0/1].**
+
+  >[!Request completa]
+  >
+  > ```json
+  > {
+  >   "nombre": "Protector pantalla",
+  >   "descripcion": "Aumenta la vida util del monitor.",
+  >   "id_fabricante": 3,
+  >   "ruta_imagen": "C:\\Documentos\\Imagenes\\producto.png",
+  >   "precio": 43650,
+  >   "moneda": "ARG",
+  >   "oferta": 1
+  > }
+  >```
+  
+
+  >[!IMPORTANT]
+  >
+  > **Verbo PUT requiere autenticacion.**
 
 
 
